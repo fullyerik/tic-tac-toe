@@ -2,6 +2,9 @@
 let currentUser = null;
 let users = {};
 
+// Standard-Profilbild (Base64-kodiertes Bild)
+const DEFAULT_PROFILE_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS11c2VyIj48cGF0aCBkPSJNMjAgMjF2LTJhNCA0IDAgMCAwLTQtNEg4YTQgNCAwIDAgMC00IDR2MiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIvPjwvc3ZnPg==';
+
 // Prüfen, ob bereits Benutzerdaten im Local Storage vorhanden sind
 document.addEventListener('DOMContentLoaded', function() {
     loadUsers();
@@ -51,40 +54,167 @@ function setupEventListeners() {
     createAccountSection();
 }
 
-// Erstellen des Account-Einstellungen-Bereichs
+// Update createAccountSection function with profile image functionality
 function createAccountSection() {
     if (!document.getElementById('account-section')) {
-        // Container erstellen
         const accountSection = document.createElement('div');
         accountSection.id = 'account-section';
-        accountSection.className = 'hidden';
+        accountSection.className = 'hidden container';
         
-        // Inhalt für Account-Bereich
         accountSection.innerHTML = `
             <h2>Account Einstellungen</h2>
-            
-            <div id="account-message" class="message hidden"></div>
-            
-            <div class="account-form">
-                <h3>Benutzername ändern</h3>
-                <p>Aktueller Benutzername: <span id="current-account-username" class="highlight-username"></span></p>
-                <input type="text" id="new-username" placeholder="Neuer Benutzername">
-                <button id="change-username-button">Benutzername ändern</button>
+            <div class="account-container">
+                <div class="account-card">
+                    <div class="account-header">
+                        <div class="profile-image-container">
+                            <img id="profile-image" src="${DEFAULT_PROFILE_IMAGE}" alt="Profilbild">
+                            <div class="profile-image-overlay">
+                                <span>Ändern</span>
+                            </div>
+                        </div>
+                        <h3 id="account-username"></h3>
+                    </div>
+                    
+                    <div class="account-body">
+                        <div id="account-message" class="hidden message"></div>
+                        
+                        <div class="account-form">
+                            <h4>Benutzername ändern</h4>
+                            <div class="input-group">
+                                <input type="text" id="new-username" placeholder="Neuer Benutzername">
+                            </div>
+                            <button class="account-button" id="change-username-button">
+                                Benutzername ändern
+                            </button>
+                        </div>
+                        
+                        <div class="account-form">
+                            <h4>Profilbild ändern</h4>
+                            <div class="input-group profile-upload">
+                                <input type="file" id="profile-image-upload" accept="image/*">
+                                <button class="account-button" id="upload-image-button">
+                                    Bild hochladen
+                                </button>
+                            </div>
+                            <button class="account-button secondary-button" id="reset-image-button">
+                                Standardbild verwenden
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="return-from-account" class="menu-button">
+                    Zurück zum Menü
+                </button>
             </div>
-            
-            <button id="return-from-account">Zurück zum Menü</button>
         `;
         
-        // Abschnitt zum Container hinzufügen
         document.getElementById('main-container').appendChild(accountSection);
         
-        // Event-Listener für die neuen Buttons einrichten
+        // Add event listeners
         document.getElementById('change-username-button').addEventListener('click', changeUsername);
-        // Der folgende Code-Abschnitt war fehlerhaft und wurde korrigiert
-        document.getElementById('return-from-account').addEventListener('click', function() {
+        document.getElementById('return-from-account').addEventListener('click', () => {
             hideAllSections();
             document.getElementById('main-section').classList.remove('hidden');
         });
+        
+        // Add profile image related event listeners
+        document.getElementById('upload-image-button').addEventListener('click', uploadProfileImage);
+        document.getElementById('reset-image-button').addEventListener('click', resetProfileImage);
+        
+        // Optional: Allow clicking on the profile image to trigger file upload
+        document.querySelector('.profile-image-container').addEventListener('click', function() {
+            document.getElementById('profile-image-upload').click();
+        });
+    }
+}
+
+// Funktion zum Hochladen eines neuen Profilbilds
+function uploadProfileImage() {
+    const fileInput = document.getElementById('profile-image-upload');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showAccountMessage('Bitte wähle ein Bild aus.', 'error');
+        return;
+    }
+    
+    // Überprüfung des Dateityps
+    if (!file.type.match('image.*')) {
+        showAccountMessage('Bitte wähle eine gültige Bilddatei.', 'error');
+        return;
+    }
+    
+    // Größenbeschränkung (max. 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        showAccountMessage('Das Bild ist zu groß. Maximale Größe: 2MB.', 'error');
+        return;
+    }
+    
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Speichern des Bildes für den aktuellen Benutzer
+        if (currentUser && users[currentUser]) {
+            users[currentUser].profileImage = imageData;
+            saveUsers();
+            
+            // Aktualisieren des angezeigten Bildes
+            updateProfileImage();
+            
+            showAccountMessage('Profilbild erfolgreich aktualisiert!', 'success');
+        }
+    };
+    
+    reader.onerror = function() {
+        showAccountMessage('Fehler beim Lesen der Datei.', 'error');
+    };
+    
+    // Lesen der Datei als Data-URL
+    reader.readAsDataURL(file);
+    
+    // Zurücksetzen des Datei-Inputs
+    fileInput.value = '';
+}
+
+// Funktion zum Zurücksetzen des Profilbilds auf das Standardbild
+function resetProfileImage() {
+    if (currentUser && users[currentUser]) {
+        users[currentUser].profileImage = DEFAULT_PROFILE_IMAGE;
+        saveUsers();
+        
+        // Aktualisieren des angezeigten Bildes
+        updateProfileImage();
+        
+        showAccountMessage('Profilbild zurückgesetzt.', 'success');
+    }
+}
+
+// Funktion zum Aktualisieren des angezeigten Profilbilds
+function updateProfileImage() {
+    const profileImageElement = document.getElementById('profile-image');
+    const headerProfileElement = document.getElementById('header-profile-image');
+    
+    if (currentUser && users[currentUser] && users[currentUser].profileImage) {
+        const imageData = users[currentUser].profileImage;
+        
+        if (profileImageElement) {
+            profileImageElement.src = imageData;
+        }
+        
+        if (headerProfileElement) {
+            headerProfileElement.src = imageData;
+        }
+    } else {
+        if (profileImageElement) {
+            profileImageElement.src = DEFAULT_PROFILE_IMAGE;
+        }
+        
+        if (headerProfileElement) {
+            headerProfileElement.src = DEFAULT_PROFILE_IMAGE;
+        }
     }
 }
 
@@ -136,6 +266,7 @@ function registerUser() {
     // Neuen Benutzer erstellen und speichern
     users[username] = {
         password: password,
+        profileImage: DEFAULT_PROFILE_IMAGE, // Standard-Profilbild hinzufügen
         stats: {
             gamesPlayed: 0,
             wins: 0,
@@ -213,11 +344,14 @@ function showAccountSettings() {
     
     // Aktuellen Benutzernamen im Account-Bereich anzeigen
     updateAccountUsername();
+    
+    // Profilbild aktualisieren
+    updateProfileImage();
 }
 
 // Aktualisiere den angezeigten Benutzernamen im Account-Bereich
 function updateAccountUsername() {
-    const accountUsernameDisplay = document.getElementById('current-account-username');
+    const accountUsernameDisplay = document.getElementById('account-username');
     if (accountUsernameDisplay) {
         accountUsernameDisplay.textContent = currentUser;
     }
@@ -266,9 +400,23 @@ function updateUsernameDisplay() {
     const usernameDisplay = document.getElementById('username-display');
     const usernameText = document.getElementById('current-username-display');
     
+    // Füge Profilbild zur Benutzeranzeige hinzu, falls noch nicht vorhanden
+    if (!document.getElementById('header-profile-image')) {
+        const profileImg = document.createElement('img');
+        profileImg.id = 'header-profile-image';
+        profileImg.alt = 'Profilbild';
+        profileImg.className = 'header-profile-image';
+        
+        // Einfügen vor dem Benutzernamen
+        usernameDisplay.insertBefore(profileImg, usernameText);
+    }
+    
     if (currentUser) {
         usernameText.textContent = currentUser;
         usernameDisplay.classList.remove('hidden');
+        
+        // Profilbild aktualisieren
+        updateProfileImage();
     } else {
         usernameDisplay.classList.add('hidden');
     }
