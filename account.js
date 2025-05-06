@@ -417,6 +417,13 @@ function updateUsernameDisplay() {
         
         // Profilbild aktualisieren
         updateProfileImage();
+        
+        // Stelle sicher, dass das Display sichtbar ist, auch nach dem Seitenwechsel
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && currentUser) {
+                usernameDisplay.classList.remove('hidden');
+            }
+        });
     } else {
         usernameDisplay.classList.add('hidden');
     }
@@ -440,20 +447,115 @@ function updateUserStats(statsUpdate) {
     }
 }
 
-// Prüfen, ob ein Benutzer eingeloggt ist
+// Prüfen, ob ein Benutzer eingeloggt ist (für die tic-tac-toe.js)
 function isUserLoggedIn() {
     return currentUser !== null;
 }
 
-// Funktion zum Abrufen des aktuellen Benutzernamens
-function getCurrentUsername() {
-    return currentUser;
+// Funktion zum Anzeigen der Statistik
+function showStats() {
+    if (!currentUser) {
+        showMessage('Bitte logge dich ein, um deine Statistiken zu sehen.', 'error');
+        return;
+    }
+    
+    hideAllSections();
+    document.getElementById('stats-section').classList.remove('hidden');
+    
+    // Statistiken aktualisieren
+    updateStatsDisplay();
 }
 
-// Funktionen exportieren, die von anderen Skripten verwendet werden können
-window.accountManager = {
-    isUserLoggedIn,
-    getCurrentUsername,
-    getCurrentUserStats,
-    updateUserStats
-};
+// Funktion zum Aktualisieren der Statistikanzeige
+function updateStatsDisplay() {
+    if (!currentUser || !users[currentUser]) return;
+    
+    const stats = users[currentUser].stats;
+    const statsDisplay = document.getElementById('stats-display');
+    
+    if (statsDisplay) {
+        statsDisplay.innerHTML = `
+            <h3>Statistiken für ${currentUser}</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">${stats.gamesPlayed}</div>
+                    <div class="stat-label">Spiele</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.wins}</div>
+                    <div class="stat-label">Siege</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.losses}</div>
+                    <div class="stat-label">Niederlagen</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.draws}</div>
+                    <div class="stat-label">Unentschieden</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.gamesPlayed > 0 ? Math.round((stats.wins / stats.gamesPlayed) * 100) : 0}%</div>
+                    <div class="stat-label">Siegquote</div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Stats-Button Event-Listener hinzufügen
+document.addEventListener('DOMContentLoaded', function() {
+    const statsButton = document.getElementById('stats-button');
+    if (statsButton) {
+        statsButton.addEventListener('click', showStats);
+    }
+    
+    // Zurück-Button aus dem Statistikbereich
+    const returnFromStatsButton = document.getElementById('return-from-stats');
+    if (returnFromStatsButton) {
+        returnFromStatsButton.addEventListener('click', function() {
+            hideAllSections();
+            document.getElementById('main-section').classList.remove('hidden');
+        });
+    }
+});
+
+// Funktion zum Zurücksetzen der Statistiken
+function resetStats() {
+    if (!currentUser || !users[currentUser]) return;
+    
+    // Bestätigung vom Benutzer einholen
+    const confirmed = confirm('Möchtest du wirklich alle deine Statistiken zurücksetzen?');
+    
+    if (confirmed) {
+        users[currentUser].stats = {
+            gamesPlayed: 0,
+            wins: 0,
+            losses: 0,
+            draws: 0
+        };
+        
+        saveUsers();
+        updateStatsDisplay();
+        
+        showMessage('Statistiken wurden zurückgesetzt.', 'success');
+    }
+}
+
+// Reset-Stats-Button Event-Listener hinzufügen
+document.addEventListener('DOMContentLoaded', function() {
+    const resetStatsButton = document.getElementById('reset-stats-button');
+    if (resetStatsButton) {
+        resetStatsButton.addEventListener('click', resetStats);
+    }
+});
+
+// Exportieren der Funktionen für die tic-tac-toe.js
+// Dies ist nur notwendig, wenn die Dateien getrennt sind und über Module importiert werden
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        isUserLoggedIn,
+        getCurrentUserStats,
+        updateUserStats,
+        showMessage
+    };
+}
