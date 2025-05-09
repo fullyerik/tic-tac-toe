@@ -284,6 +284,30 @@ input[type="text"]:focus, input[type="password"]:focus {
 .page-transition {
     animation: fadeIn 0.5s ease-in-out;
 }
+/* Login-required message styling */
+#login-required-message {
+    text-align: center;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+#login-required-message p {
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Stats content transition */
+#stats-content {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#stats-content.hidden {
+    opacity: 0;
+}
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
