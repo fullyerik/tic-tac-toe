@@ -19,8 +19,9 @@ const app = {
         document.getElementById('difficulty-button').addEventListener('click', () => this.showSection('difficulty-section'));
         document.getElementById('stats-button').addEventListener('click', () => {
             this.showSection('stats-section');
-            this.showStats(); // Statistiken aktualisieren, wenn auf den Button geklickt wird
+            window.updateStatsDisplay(); // Statistiken aktualisieren, wenn auf den Button geklickt wird
         });
+        document.getElementById('account-button').addEventListener('click', () => this.showSection('account-section'));
         document.getElementById('logout-button').addEventListener('click', () => this.logout());
         
         // Event-Listener für Schwierigkeitsgrad
@@ -47,9 +48,6 @@ const app = {
         
         // Neues Spiel Button Event-Listener
         document.getElementById('play-again-button').addEventListener('click', () => this.startGame());
-        
-        // Statistik zurücksetzen Button Event-Listener
-        document.getElementById('reset-stats-button').addEventListener('click', () => this.resetStats());
         
         // Markiere aktuelle Schwierigkeit
         this.updateDifficultyUI();
@@ -78,6 +76,26 @@ const app = {
             this.showMessage(`Willkommen zurück, ${username}!`, 'success');
             this.showSection('main-section');
             this.updateUsernameDisplay();
+            
+            // Stats initialisieren nach Login falls sie nicht existieren
+            if (!this.users[username].stats) {
+                this.users[username].stats = {
+                    wins: 0,
+                    losses: 0,
+                    draws: 0,
+                    rating: 1000 // Basis-Rating hinzufügen
+                };
+                this.saveUsers();
+            } 
+            // Rating hinzufügen, falls noch nicht vorhanden
+            else if (this.users[username].stats.rating === undefined) {
+                this.users[username].stats.rating = 1000;
+                // Oder besser, das Rating basierend auf bestehenden Spielen berechnen
+                if (window.calculateRating) {
+                    this.users[username].stats.rating = window.calculateRating(this.users[username].stats);
+                }
+                this.saveUsers();
+            }
         } else {
             this.showMessage('Ungültiger Benutzername oder Passwort!', 'error');
         }
@@ -151,17 +169,30 @@ const app = {
     
     showSection: function(sectionId) {
         // Alle Bereiche ausblenden
-        const sections = ['login-section', 'main-section', 'difficulty-section', 'game-section', 'stats-section'];
+        const sections = ['login-section', 'main-section', 'difficulty-section', 'game-section', 'stats-section', 'account-section'];
         sections.forEach(section => {
-            document.getElementById(section).classList.add('hidden');
+            const sectionElement = document.getElementById(section);
+            if (sectionElement) {
+                sectionElement.classList.add('hidden');
+            }
         });
         
         // Gewählten Bereich einblenden
-        document.getElementById(sectionId).classList.remove('hidden');
-        
-        // Wenn Spielbereich angezeigt wird, Spiel starten
-        if (sectionId === 'game-section') {
-            this.startGame();
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+            selectedSection.classList.remove('hidden');
+            
+            // Wenn Spielbereich angezeigt wird, Spiel starten
+            if (sectionId === 'game-section') {
+                this.startGame();
+            }
+            
+            // Wenn Statistikbereich angezeigt wird, Statistiken aktualisieren
+            if (sectionId === 'stats-section') {
+                if (window.updateStatsDisplay) {
+                    window.updateStatsDisplay();
+                }
+            }
         }
     },
     
@@ -424,21 +455,27 @@ const app = {
             status.textContent = 'Du hast gewonnen!';
             status.classList.add('win-message');
             this.gameActive = false;
-            this.updateStats('win');
+            
+            // Statistik aktualisieren - WIN
+            if (window.updateGameStats) {
+                window.updateGameStats('win');
+            }
+            
             this.highlightWinningCells('X');
             this.createConfetti();
             this.showPlayAgainButton();
-            // Aktualisiere die Statistik direkt nach dem Gewinn
-            this.updateStatsDisplay();
             return true;
         } else if (this.checkWinCondition(this.board, 'O')) {
             status.textContent = 'Der Computer hat gewonnen!';
             this.gameActive = false;
-            this.updateStats('loss');
+            
+            // Statistik aktualisieren - LOSS
+            if (window.updateGameStats) {
+                window.updateGameStats('loss');
+            }
+            
             this.highlightWinningCells('O');
             this.showPlayAgainButton();
-            // Aktualisiere die Statistik direkt nach der Niederlage
-            this.updateStatsDisplay();
             return true;
         }
         
@@ -446,10 +483,13 @@ const app = {
         if (!this.board.includes('')) {
             status.textContent = 'Unentschieden!';
             this.gameActive = false;
-            this.updateStats('draw');
+            
+            // Statistik aktualisieren - DRAW
+            if (window.updateGameStats) {
+                window.updateGameStats('draw');
+            }
+            
             this.showPlayAgainButton();
-            // Aktualisiere die Statistik direkt nach dem Unentschieden
-            this.updateStatsDisplay();
             return true;
         }
         
@@ -535,106 +575,6 @@ const app = {
                 confetti.remove();
             }, duration * 1000 + delay * 1000);
         }
-    },
-    
-    updateStats: function(result) {
-        if (!this.currentUser) {
-            return;
-        }
-        
-        // Statistik aktualisieren
-        switch (result) {
-            case 'win':
-                this.users[this.currentUser].stats.wins++;
-                break;
-            case 'loss':
-                this.users[this.currentUser].stats.losses++;
-                break;
-            case 'draw':
-                this.users[this.currentUser].stats.draws++;
-                break;
-        }
-        
-        // Speichern
-        this.saveUsers();
-    },
-    
-    resetStats: function() {
-        if (!this.currentUser) {
-            return;
-        }
-        
-        // Reset Statistik ohne Bestätigung
-        this.users[this.currentUser].stats = {
-            wins: 0,
-            losses: 0,
-            draws: 0
-        };
-        
-        // Speichern
-        this.saveUsers();
-        
-        // Statistik aktualisieren
-        this.updateStatsDisplay();
-        
-        // Erfolgsmeldung anzeigen
-        this.showMessage('Statistik wurde erfolgreich zurückgesetzt!', 'success');
-    },
-    
-    // Diese Methode aktualisiert die Statistik-Anzeige
-    updateStatsDisplay: function() {
-        if (!this.currentUser) {
-            return;
-        }
-        
-        // Statistik aus dem User-Objekt holen
-        const stats = this.users[this.currentUser].stats;
-        const statsBody = document.getElementById('stats-body');
-        const total = stats.wins + stats.losses + stats.draws;
-        
-        // Leere den Statistik-Körper zuerst
-        statsBody.innerHTML = '';
-        
-        // Füge Zeilen hinzu
-        const winRow = document.createElement('tr');
-        winRow.innerHTML = `<td>Siege</td><td>${stats.wins}</td><td>${total > 0 ? ((stats.wins / total) * 100).toFixed(1) + '%' : '0%'}</td>`;
-        statsBody.appendChild(winRow);
-        
-        const lossRow = document.createElement('tr');
-        lossRow.innerHTML = `<td>Niederlagen</td><td>${stats.losses}</td><td>${total > 0 ? ((stats.losses / total) * 100).toFixed(1) + '%' : '0%'}</td>`;
-        statsBody.appendChild(lossRow);
-        
-        const drawRow = document.createElement('tr');
-        drawRow.innerHTML = `<td>Unentschieden</td><td>${stats.draws}</td><td>${total > 0 ? ((stats.draws / total) * 100).toFixed(1) + '%' : '0%'}</td>`;
-        statsBody.appendChild(drawRow);
-        
-        // Total-Spiele aktualisieren
-        document.getElementById('total-games').textContent = total;
-        
-        // Gewinnrate berechnen
-        const winrateElement = document.getElementById('winrate');
-        if (stats.wins + stats.losses > 0) {
-            const winrate = (stats.wins / (stats.wins + stats.losses) * 100).toFixed(2);
-            winrateElement.textContent = `Gewinnrate: ${winrate}%`;
-        } else {
-            winrateElement.textContent = 'Noch keine Spiele gespielt.';
-        }
-        
-        // Balkendiagramm aktualisieren
-        if (total > 0) {
-            document.getElementById('wins-bar').style.width = `${(stats.wins / total) * 100}%`;
-            document.getElementById('losses-bar').style.width = `${(stats.losses / total) * 100}%`;
-            document.getElementById('draws-bar').style.width = `${(stats.draws / total) * 100}%`;
-        } else {
-            document.getElementById('wins-bar').style.width = '0%';
-            document.getElementById('losses-bar').style.width = '0%';
-            document.getElementById('draws-bar').style.width = '0%';
-        }
-    },
-    
-    showStats: function() {
-        // Die alte Methode, die jetzt einfach updateStatsDisplay aufruft
-        this.updateStatsDisplay();
     }
 };
 
