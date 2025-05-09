@@ -100,39 +100,56 @@
             
             <button id="return-from-game">Zurück zum Menü</button>
         </div>
-        <div id="stats-section" class="container page-transition">
-            <!-- Detaillierte Tabelle -->
-            <div class="stats-container">
-                <h3>Statistik Übersicht</h3>
-                <table class="stat-table">
-                    <thead>
-                        <tr>
-                            <th>Kategorie</th>
-                            <th>Anzahl</th>
-                            <th>Prozent</th>
-                        </tr>
-                    </thead>
-                    <tbody id="stats-body">
-                        <!-- Dynamisch gefüllt -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td><strong>Gesamt</strong></td>
-                            <td id="table-total-games"><strong>0</strong></td>
-                            <td><strong>100%</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            
-            <!-- Aktionsbuttons -->
-            <div class="action-buttons">
-                <button id="reset-stats-button" class="button-secondary">Statistik zurücksetzen</button>
-                <button id="return-from-stats">Zurück zum Menü</button>
-            </div>
+        <!-- Statistikbereich anpassen -->
+    <!-- Statistikbereich -->
+<div id="stats-section" class="container page-transition hidden">
+    <h2>Deine Spielstatistiken</h2>
+    <div id="login-required-message" class="hidden">
+        <p>Bitte logge dich ein, um deine Statistiken zu sehen.</p>
+    </div>
+    <div id="stats-content" class="hidden">
+        <!-- Winrate Info -->
+        <div id="winrate" class="stat-info"></div>
+        
+        <!-- NEU: Statistik-Visualisierung -->
+        <div id="stats-chart" class="stats-visualization">
+            <!-- Wird dynamisch gefüllt -->
         </div>
-    <script src="account.js"></script>
-    <script src="tic-tac-toe.js"></script>
-    <script src="stats.js"></script>
+        
+        <!-- Detaillierte Tabelle -->
+        <div class="stats-container">
+            <h3>Statistik Übersicht</h3>
+            <table class="stat-table">
+                <thead>
+                    <tr>
+                        <th>Kategorie</th>
+                        <th>Anzahl</th>
+                        <th>Prozent</th>
+                    </tr>
+                </thead>
+                <tbody id="stats-body">
+                <!-- Dynamisch gefüllt -->
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td><strong>Gesamt</strong></td>
+                        <td id="table-total-games"><strong>0</strong></td>
+                        <td><strong>100%</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    
+        <!-- Aktionsbuttons -->
+        <div class="action-buttons">
+            <button id="reset-stats-button" class="button-secondary">Statistik zurücksetzen</button>
+            <button id="return-from-stats">Zurück zum Menü</button>
+        </div>
+    </div>
+</div>
+        <!-- Change script order at bottom of index.html -->
+        <script src="stats.js"></script>
+        <script src="account.js"></script>
+        <script src="tic-tac-toe.js"></script>
 </body>
 </html>
