@@ -126,5 +126,21 @@
         <script src="stats.js"></script>
         <script src="account.js"></script>
         <script src="tic-tac-toe.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+        <script>
+          // Deine eigene Config von Firebase Console!
+          var firebaseConfig = {
+            apiKey: "DEINE_API_KEY",
+            authDomain: "DEIN_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://DEIN_PROJECT_ID.firebaseio.com",
+            projectId: "DEIN_PROJECT_ID",
+            storageBucket: "DEIN_PROJECT_ID.appspot.com",
+            messagingSenderId: "DEINE_SENDER_ID",
+            appId: "DEINE_APP_ID"
+          };
+          firebase.initializeApp(firebaseConfig);
+          var db = firebase.database();
+        </script>
     </body>
 </html>
