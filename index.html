@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="account-styles.css">
+    <link rel="stylesheet" href="stats-styles.css">
+</head>
+<body>
+    <!-- Benutzernamensanzeige oben links -->
+    <div id="username-display" class="username-display hidden">
+        <span id="current-username-display"></span>
+    </div>
+
+    <div class="container" id="main-container">
+        <h1>Tic Tac Toe</h1>
+        
+        <!-- Login Bereich -->
+        <div id="login-section">
+            <h2>Willkommen! Bitte einloggen oder registrieren.</h2>
+            
+            <div id="message" class="hidden message"></div>
+            
+            <div class="login-form">
+                <h3>Einloggen</h3>
+                <input type="text" id="login-username" placeholder="Benutzername">
+                <input type="password" id="login-password" placeholder="Passwort">
+                <button id="login-button">Einloggen</button>
+            </div>
+            
+            <div class="register-form">
+                <h3>Registrieren</h3>
+                <input type="text" id="register-username" placeholder="Benutzername">
+                <input type="password" id="register-password" placeholder="Passwort">
+                <button id="register-button">Registrieren</button>
+            </div>
+        </div>
+        
+        <!-- Hauptmenü -->
+        <div id="main-section" class="hidden">
+            <h2>Hauptmenü</h2>
+            
+            <div class="menu">
+                <button class="menu-button" id="new-game-button">Neues Spiel</button>
+                <button class="menu-button" id="difficulty-button">Schwierigkeitsgrad ändern</button>
+                <button class="menu-button" id="stats-button">Statistik anzeigen</button>
+                <button class="menu-button" id="account-button">Account</button>
+                <button class="menu-button" id="logout-button">Ausloggen</button>
+            </div>
+        </div>
+        
+        <!-- Schwierigkeitsgrad Auswahl -->
+        <div id="difficulty-section" class="hidden">
+            <h2>Wähle den Schwierigkeitsgrad</h2>
+            
+            <div class="difficulty-selector">
+                <div class="difficulty-option" data-difficulty="1">
+                    <h3>Easy</h3>
+                    <p>Zufällige Züge</p>
+                </div>
+                <div class="difficulty-option" data-difficulty="2">
+                    <h3>Medium</h3>
+                    <p>Etwas Strategie</p>
+                </div>
+                <div class="difficulty-option" data-difficulty="3">
+                    <h3>Hard</h3>
+                    <p>Gute Strategie</p>
+                </div>
+                <div class="difficulty-option" data-difficulty="4">
+                    <h3>Impossible</h3>
+                    <p>Unbesiegbar</p>
+                </div>
+            </div>
+            
+            <button id="return-from-difficulty">Zurück zum Menü</button>
+        </div>
+        
+        <!-- Spielbereich -->
+        <div id="game-section" class="hidden">
+            
+            <div class="status" id="game-status">Du spielst als X</div>
+            
+            <div class="board-center">
+                <div class="board" id="game-board">
+                    <div class="cell" data-index="0"></div>
+                    <div class="cell" data-index="1"></div>
+                    <div class="cell" data-index="2"></div>
+                    <div class="cell" data-index="3"></div>
+                    <div class="cell" data-index="4"></div>
+                    <div class="cell" data-index="5"></div>
+                    <div class="cell" data-index="6"></div>
+                    <div class="cell" data-index="7"></div>
+                    <div class="cell" data-index="8"></div>
+                </div>
+            </div>
+        
+            <button id="play-again-button" class="button hidden">Neues Spiel</button>
+            
+            <button id="return-from-game">Zurück zum Menü</button>
+        </div>
+    <div id="stats-section" class="container page-transition">
+        <h2>Deine Spielstatistiken</h2>
+        <div id="stats-content">
+            <div class="stats-container">
+                <table class="stat-table">
+                    <thead>
+                        <tr>
+                            <th>Kategorie</th>
+                            <th>Anzahl</th>
+                            <th>Prozent</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stats-body">
+                        <!-- Wird dynamisch gefüllt -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="action-buttons">
+                <button id="reset-stats-button" class="button-secondary">Statistik zurücksetzen</button>
+                <button id="return-from-stats" class="menu-button">Zurück zum Menü</button>
+            </div>
+        </div>
+    </div>
+        <script src="stats.js"></script>
+        <script src="account.js"></script>
+        <script src="tic-tac-toe.js"></script>
+    </body>
+</html>

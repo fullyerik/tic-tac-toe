@@ -1,0 +1,376 @@
+/* Account Styles - Luxuriöses Design */
+
+:root {
+  --account-primary: #6a11cb;
+  --account-secondary: #2575fc;
+  --account-light: #f0f4ff;
+  --account-dark: #2c3e50;
+  --account-danger: #e74c3c;
+  --account-success: #2ecc71;
+  --account-shadow: rgba(0, 0, 0, 0.1);
+  --account-card-radius: 12px;
+  --account-button-radius: 6px;
+  --account-transition: all 0.3s ease;
+}
+
+/* Neue Position für Benutzernamensanzeige */
+.username-display {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, var(--account-primary), var(--account-secondary));
+  color: white;
+  padding: 10px 15px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 18px;
+  font-weight: 600;
+  transition: var(--account-transition);
+}
+
+.username-display:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Anpassung für das Profilbild in der Header-Anzeige */
+.header-profile-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#current-username-display {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Account Container Styling */
+.account-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Card Design mit Glasmorphismus-Effekt */
+.account-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: var(--account-card-radius);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: var(--account-transition);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.account-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Profilbereich */
+.account-header {
+  background: linear-gradient(135deg, var(--account-primary), var(--account-secondary));
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* Neues Styling für Profilbild */
+.profile-image-container {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 3px solid white;
+  overflow: hidden;
+  transition: var(--account-transition);
+}
+
+.profile-image-container:hover {
+  transform: scale(1.05);
+}
+
+#profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: var(--account-transition);
+}
+
+.profile-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--account-transition);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-image-container:hover .profile-image-overlay {
+  opacity: 1;
+}
+
+/* Bildupload-Styling */
+.profile-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+#profile-image-upload {
+  border: 2px dashed #d1d8e0;
+  border-radius: var(--account-button-radius);
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--account-transition);
+  margin-bottom: 10px;
+}
+
+#profile-image-upload:hover {
+  border-color: var(--account-secondary);
+  background-color: rgba(37, 117, 252, 0.05);
+}
+
+/* Sekundärer Button für "Standardbild verwenden" */
+.secondary-button {
+  background: transparent;
+  color: var(--account-secondary);
+  border: 2px solid var(--account-secondary);
+  box-shadow: none;
+}
+
+.secondary-button:hover {
+  background: rgba(37, 117, 252, 0.1);
+  color: var(--account-primary);
+  border-color: var(--account-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(106, 17, 203, 0.15);
+}
+
+#account-username {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Hauptinhalt */
+.account-body {
+  padding: 30px;
+}
+
+.account-form h4 {
+  margin: 15px 0 10px;
+  color: var(--account-dark);
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 2px solid var(--account-light);
+  padding-bottom: 8px;
+}
+
+.account-form .input-group {
+  margin-bottom: 15px;
+}
+
+.account-form input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e1e5f0;
+  border-radius: var(--account-button-radius);
+  font-size: 16px;
+  transition: var(--account-transition);
+  outline: none;
+}
+
+.account-form input:focus {
+  border-color: var(--account-secondary);
+  box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+}
+
+.account-form input::placeholder {
+  color: #b3b9c5;
+}
+
+/* Spezielles Styling für Datei-Upload */
+.account-form input[type="file"] {
+  display: none;
+}
+
+.account-form .file-label {
+  display: block;
+  background-color: #f0f4ff;
+  color: var(--account-dark);
+  padding: 12px 15px;
+  text-align: center;
+  border-radius: var(--account-button-radius);
+  cursor: pointer;
+  transition: var(--account-transition);
+  font-size: 16px;
+  margin-bottom: 10px;
+  border: 2px dashed #d1d8e0;
+}
+
+.account-form .file-label:hover {
+  background-color: #e1e5f0;
+  border-color: var(--account-secondary);
+}
+
+/* Button Styling */
+.account-button {
+  background: linear-gradient(135deg, var(--account-secondary), var(--account-primary));
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: var(--account-button-radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--account-transition);
+  box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
+  width: 100%;
+  margin-top: 5px;
+}
+
+.account-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(106, 17, 203, 0.4);
+}
+
+.account-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(106, 17, 203, 0.3);
+}
+
+/* Danger Button für Account löschen */
+.danger-button {
+  background: var(--account-danger);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--account-button-radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--account-transition);
+  margin-top: 10px;
+}
+
+.danger-button:hover {
+  background: #c0392b;
+}
+
+/* Footer Bereich */
+.account-footer {
+  padding: 15px 30px 30px;
+  text-align: center;
+  border-top: 1px solid var(--account-light);
+}
+
+/* Nachrichtenbereich für Statusmeldungen */
+.message {
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: var(--account-button-radius);
+  font-weight: 500;
+  text-align: center;
+}
+
+.message.success {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: var(--account-success);
+  border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.message.error {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: var(--account-danger);
+  border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.hidden {
+  display: none;
+}
+
+/* Zurück-Button */
+#return-from-account {
+  margin-top: 20px;
+  background: var(--account-light);
+  color: var(--account-dark);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--account-button-radius);
+  font-size: 16px;
+  cursor: pointer;
+  transition: var(--account-transition);
+}
+
+#return-from-account:hover {
+  background: #e1e5f0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .account-container {
+    padding: 10px;
+  }
+  
+  .account-body {
+    padding: 20px;
+  }
+  
+  .profile-image-container {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .username-display {
+    top: 10px;
+    left: 10px;
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+  
+  .header-profile-image {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Animation für das Laden des Account-Bereichs */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#account-section {
+  animation: fadeIn 0.5s ease forwards;
+}
