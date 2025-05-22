@@ -1,0 +1,39 @@
+.coming-soon-banner {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #6a11cb20 0%, #2575fc20 100%);
+    border-radius: 15px;
+    border: 2px dashed #6a11cb;
+    margin: 20px auto;
+}
+
+.coming-soon-text {
+    font-size: 2.5em;
+    font-weight: bold;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin: 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: pulse 2s infinite;
+}
+
+.coming-soon-banner p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
