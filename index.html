@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="account-styles.css">
     <link rel="stylesheet" href="stats-styles.css">
+    <link rel="stylesheet" href="coming-soon.css">
 </head>
 <body>
     <!-- Benutzernamensanzeige oben links -->
@@ -100,47 +101,19 @@
             
             <button id="return-from-game">Zurück zum Menü</button>
         </div>
-    <div id="stats-section" class="container page-transition">
-        <h2>Deine Spielstatistiken</h2>
-        <div id="stats-content">
-            <div class="stats-container">
-                <table class="stat-table">
-                    <thead>
-                        <tr>
-                            <th>Kategorie</th>
-                            <th>Anzahl</th>
-                            <th>Prozent</th>
-                        </tr>
-                    </thead>
-                    <tbody id="stats-body">
-                        <!-- Wird dynamisch gefüllt -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="action-buttons">
-                <button id="reset-stats-button" class="button-secondary">Statistik zurücksetzen</button>
-                <button id="return-from-stats" class="menu-button">Zurück zum Menü</button>
+        
+        <!-- Statistik-Bereich korrigieren -->
+        <div id="stats-section" class="container page-transition">
+            <div class="coming-soon-banner">
+                <h2>Statistiken</h2>
+                <div class="coming-soon-text">Coming Soon!</div>
+                <p>Diese Funktion wird bald verfügbar sein.</p>
+                <button id="return-from-stats">Zurück zum Menü</button>
             </div>
         </div>
-    </div>
+        
         <script src="stats.js"></script>
         <script src="account.js"></script>
         <script src="tic-tac-toe.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-        <script>
-          // Deine eigene Config von Firebase Console!
-          var firebaseConfig = {
-            apiKey: "DEINE_API_KEY",
-            authDomain: "DEIN_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://DEIN_PROJECT_ID.firebaseio.com",
-            projectId: "DEIN_PROJECT_ID",
-            storageBucket: "DEIN_PROJECT_ID.appspot.com",
-            messagingSenderId: "DEINE_SENDER_ID",
-            appId: "DEINE_APP_ID"
-          };
-          firebase.initializeApp(firebaseConfig);
-          var db = firebase.database();
-        </script>
     </body>
 </html>
